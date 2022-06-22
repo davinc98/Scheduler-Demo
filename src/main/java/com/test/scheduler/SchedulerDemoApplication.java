@@ -32,35 +32,27 @@ public class SchedulerDemoApplication {
 		String sCarpAct = System.getProperty("user.dir");
 		String path = sCarpAct + "/archivos-que-el-gobierno-no-quiere-que-veas";
 
-		File carpeta = new File(path);
+		borrarArchivosAntiguos(path, fechaReferencia);
+		
+		Thread.sleep(1000L);
+
+	}
+	
+	public void borrarArchivosAntiguos(String pathDirectorio, Date fechaReferencia) {		
+		File carpeta = new File(pathDirectorio);
 		String[] listado = carpeta.list();
 
 		if (listado == null || listado.length == 0) {
-			System.out.println("No hay elementos dentro de la carpeta actual");
+			System.out.println("No hay elementos dentro de la carpeta");
 			return;
 		} else {
-			System.out.println("La carpeta actual contiene " + listado.length + " elementos.");
-
 			for (int i = 0; i < listado.length; i++) {
-				File fichero = new File(path + "/" + listado[i]);
-
+				File fichero = new File(pathDirectorio + "/" + listado[i]);
 				if (!fichero.isDirectory()) {
 					if (fichero.exists()) {
-
+						
 						long ms = fichero.lastModified();
 						Date d = new Date(ms);
-						Calendar c = new GregorianCalendar();
-						c.setTime(d);
-
-						String dia = Integer.toString(c.get(Calendar.DATE));
-						String mes = Integer.toString(c.get(Calendar.MONTH));
-						String ann = Integer.toString(c.get(Calendar.YEAR));
-						String hor = Integer.toString(c.get(Calendar.HOUR_OF_DAY));
-						String min = Integer.toString(c.get(Calendar.MINUTE));
-						String seg = Integer.toString(c.get(Calendar.SECOND));
-
-						System.out.println(fichero.getName() + "--> " + dia + "/" + mes + "/" + ann +
-								"   " + hor + ":"+ min + ":" + seg);
 
 						if (d.before(fechaReferencia)) {
 							System.out.println(fichero.getName() + " es antiguo");
@@ -79,8 +71,6 @@ public class SchedulerDemoApplication {
 				}
 			}
 		}
-
-		Thread.sleep(1000L);
 
 	}
 
